@@ -1,0 +1,92 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPUDKPg8WX2SzHQGaTbEwOC",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/onweb-kym/Kym/blob/main/archivos\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "\n",
+        "# Definir el directorio (cambia 'tu_directorio' por el nombre de tu carpeta)\n",
+        "DIRECTORIO_LOCAL = 'C:/Users/Hp/Documents'\n",
+        "DIRECTORIO_COLAB = '/content/drive/My Drive'\n",
+        "\n",
+        "try:\n",
+        "    import google.colab\n",
+        "    en_colab = True\n",
+        "except ImportError:\n",
+        "    en_colab = False\n",
+        "\n",
+        "if en_colab:\n",
+        "        print(\"Ejecutando en google colab\")\n",
+        "        directory = DIRECTORIO_COLAB\n",
+        "else:\n",
+        "        print(\"Ejecutando localmente\")\n",
+        "        directory = DIRECTORIO_LOCAL\n",
+        "\n",
+        "if en_colab:\n",
+        "            from google.colab import drive\n",
+        "            drive.mount('/content/drive')\n",
+        "\n",
+        "def list_files_in_directory(directory):\n",
+        "\n",
+        "    try:\n",
+        "               files = os.listdir(directory)\n",
+        "               print(\"Archivos en el directorio:\")\n",
+        "               for file in files:\n",
+        "                   print(file)\n",
+        "    except FileNotFoundError:\n",
+        "              print(\"Directorio no encontrado.\")\n",
+        "\n",
+        "list_files_in_directory(directory)\n",
+        ""
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "L0geEXOsIH_s",
+        "outputId": "369e21c8-5b52-4f5e-cf3e-115ad1bf3bba"
+      },
+      "execution_count": 29,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Ejecutando en google colab\n",
+            "Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount(\"/content/drive\", force_remount=True).\n",
+            "Archivos en el directorio:\n",
+            "Classroom\n",
+            "GOOGLE COLAB\n",
+            "Infografía Diseño de Lógica de control Sheyla Herrera.pdf\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
