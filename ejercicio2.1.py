@@ -1,4 +1,5 @@
 import os
+import fitz  # PyMuPDF para el procesamiento de archivos PDF
 from flask import Flask, request
 
 aplicacion = Flask(__name__)
@@ -28,6 +29,20 @@ def analizar_archivo(ruta_archivo, ruta_resumen):
         return f"Error procesando el archivo: {error}"
 
 
+def leer_pdf(ruta_pdf):
+    """Extrae el texto de un archivo PDF y lo devuelve como string"""
+    try:
+        documento = fitz.open(ruta_pdf)
+        texto = ""
+
+        for pagina in documento:
+            texto += pagina.get_text("text") + "\n"
+
+        return texto
+    except Exception as error:
+        return f"Error al leer el archivo PDF: {error}"
+
+
 @aplicacion.route('/')
 def inicio():
     return '''
@@ -36,7 +51,7 @@ def inicio():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ejercicio unidad 3</title>
+        <title>Subir Archivo para Análisis</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -94,12 +109,12 @@ def inicio():
         <div class="contenedor">
             <h1>Subir Archivo para Análisis</h1>
             <form action="/Ejercicio unidad 3" method="post" enctype="multipart/form-data">
-                <input type="file" name="archivo" accept=".txt" required>
+                <input type="file" name="archivo" accept=".txt, .pdf" required>
                 <br><br>
                 <button type="submit">Subir y Procesar</button>
             </form>
             <footer>
-                <p>Desarrollado con Flask · Ejercicio Yorbys Montilla </p>
+                <p>Desarrollado con Flask · Ejercicio Mejorado</p>
             </footer>
         </div>
     </body>
@@ -120,7 +135,20 @@ def subir_archivo():
     archivo.save(ruta_archivo)
 
     ruta_resumen = os.path.join(aplicacion.config['CARPETA_SUBIDAS'], 'resumen.txt')
-    resumen = analizar_archivo(ruta_archivo, ruta_resumen)
+
+    # Detectar el tipo de archivo y procesarlo
+    if archivo.filename.endswith('.txt'):
+        resumen = analizar_archivo(ruta_archivo, ruta_resumen)
+    elif archivo.filename.endswith('.pdf'):
+        contenido = leer_pdf(ruta_archivo)
+        palabras = contenido.split()
+        caracteres = len(contenido)
+        resumen = f"Resumen del archivo PDF:\nPalabras: {len(palabras)}\nCaracteres: {caracteres}\n"
+
+        with open(ruta_resumen, 'w', encoding='utf-8') as archivo_resumen:
+            archivo_resumen.write(resumen)
+    else:
+        return "Tipo de archivo no soportado."
 
     return f"<h1>Archivo procesado con éxito</h1><pre>{resumen}</pre>"
 
